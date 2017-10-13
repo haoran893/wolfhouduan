@@ -6,6 +6,7 @@ import ajax from '../../utils/ajax';
 import Logger from '../../utils/Logger';
 import {message} from 'antd';
 import './index.less';
+import fetch from '../Common/fetch.js';
 import {loginSuccessCreator} from '../../redux/Login.js';
 
 const logger = Logger.getLogger('Login');
@@ -39,35 +40,38 @@ class Login extends React.PureComponent {
    *
    * @param e
    */
-  handleSubmit = async(e) => {  // async可以配合箭头函数
-    e.preventDefault();  // 这个很重要, 防止跳转
-    this.setState({requesting: true});
-    const hide = message.loading('正在验证...', 0);
-
-    const username = this.state.username;
-    const password = this.state.password;
-    logger.debug('username = %s, password = %s', username, password);
-
-    try {
-      // 服务端验证
-      const res = await ajax.login(username, password);
-      hide();
-      logger.debug('login validate return: result %o', res);
-
-      if (res.success) {
-        message.success('登录成功');
+  handleSubmit = async(e) => {  
+   	fetch('http://47.95.205.236/kabu/login.do',{},(res)=>{
+   		console.log(res);
+   	})
+// async可以配合箭头函数
+//  e.preventDefault();  // 这个很重要, 防止跳转
+//  this.setState({requesting: true});
+//  const hide = message.loading('正在验证...', 0);
+//
+//  const username = this.state.username;
+//  const password = this.state.password;
+//
+//  try {
+//    // 服务端验证
+//    const res = await ajax.login(username, password);
+//    hide();
+//    logger.debug('login validate return: result %o', res);
+//
+//    if (res.success) {
+//      message.success('登录成功');
         // 如果登录成功, 触发一个loginSuccess的action, payload就是登录后的用户名
-        this.props.handleLoginSuccess(res.data);
-      } else {
-        message.error(`登录失败: ${res.message}, 请联系管理员`);
-        this.setState({requesting: false});
-      }
-    } catch (exception) {
-      hide();
-      message.error(`网络请求出错: ${exception.message}`);
-      logger.error('login error, %o', exception);
-      this.setState({requesting: false});
-    }
+//      this.props.handleLoginSuccess(res.data);
+//    } else {
+//      message.error(`登录失败: ${res.message}, 请联系管理员`);
+//      this.setState({requesting: false});
+//    }
+//  } catch (exception) {
+//    hide();
+//    message.error(`网络请求出错: ${exception.message}`);
+//    logger.error('login error, %o', exception);
+//    this.setState({requesting: false});
+//  }
   };
 
   render() {
